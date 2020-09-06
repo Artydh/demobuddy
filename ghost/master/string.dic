@@ -1,0 +1,177 @@
+﻿///////// 빒?긕?긚긣긡깛긵깒?긣
+///////// 빒럻쀱깏??긚렖룕
+///////// written by umeici.
+
+//Right-click menu stuff.
+
+On_username
+{
+	username
+}
+
+
+On_homeurl //Ask Mitch or forget it
+{
+	"https://mitchyart.github.io/demobuddy/"
+}
+
+On_recommendrootbutton.caption //Top menu option
+ {
+	"Credits"
+}
+
+On_sakura.recommendsites //Sites crediting the original template and walkthrough, plus the creators and documentation so you can make your own ghosts. Don't change this!
+ {
+	"Ghost Template/Walkthrough"
+	--
+	"%ASC(1)http://www.ashido.com/ukagaka/walkthrough.html%ASC(2)"
+	--
+	"Writer: Ixy"
+	--
+	"%ASC(1)https://steamcommunity.com/id/Ixy42/%ASC(2)"
+	--	
+	"Writer: Mitchy"
+	--
+	"%ASC(1)https://steamcommunity.com/id/methyr%ASC(2)"
+	--
+	"Artist: Lawdee"
+	--
+	"%ASC(1)https://steamcommunity.com/id/Lawdee/%ASC(2)"
+	--
+	"Coder: Eshap"
+	--
+	"%ASC(1)https://steamcommunity.com/id/Eshap/%ASC(2)"
+	--
+
+	--
+ }
+
+On_portalrootbutton.caption //Second menu option
+ {
+	"Make your own Ukagaka!"
+ }
+
+On_sakura.portalsites //Links to help you make your own Ukagaka!
+ {
+	"SSP Main Site"
+	--
+	"%ASC(1)http://ssp.shillest.net/%ASC(2)"
+	--
+	"YAYA Documentation"
+	--
+	"%ASC(1)http://emily.shillest.net/ayaya/?%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB/%E9%96%A2%E6%95%B0%E7%94%A8%E9%80%94%E5%88%A5%E4%B8%80%E8%A6%A7%ASC(2)"
+ }
+
+On_updatebutton.caption
+ {
+	"! Updating not available !"
+}
+
+On_dressuprootbutton.caption
+{
+	"Dress-Up (N/A)"
+}
+
+On_headlinesenserootbutton.caption
+{
+	"Headlines + RSS Feeds"
+}
+
+On_readmebutton.caption
+ {
+	"Readme"
+ }
+
+On_vanishbutton.caption
+ {
+	"Uninstall Demoman"
+}
+
+On_shellrootbutton.caption
+ {
+	"Shell"
+}
+
+On_ghostrootbutton.caption
+ {
+	"Change Ghost"
+}
+
+On_callghostrootbutton.caption
+ {
+	"Add Ghost"
+}
+ 
+On_quitbutton.caption
+ {
+	"Quit"
+}
+
+//PWEASE NO TOUCHY ANYTHING DOWN HERE!
+
+ //---- 소멸 지시 버튼 표시 교체 -------------------------------------------------------
+On_vanishbutton.visible
+ {
+ 	if deleteshitai == "ON"
+ 	{
+	"1"
+	}
+	else
+	{
+	"0"
+	}
+}
+
+//---- 딳벍뭷궻뫜궻긕?긚긣뼹롦벦 -------------------------------------------------------
+On_otherghostname
+{
+	ghostexlist = ""
+	_i = 0
+	while _i >= 0 {
+		_ghostname = NAMETOVALUE("reference%_i")
+		if _ghostname != "" {
+			if _i > 0; ghostexlist += ","
+			ghostexlist += _ghostname[0]
+			_i++
+		}
+		else; _i = -1
+	}
+	ghostexcount = ARRAYSIZE(ghostexlist)
+}
+
+//---- SHIORI 듫쁀륃뺪 ------------------------------------------------------------------
+On_version
+{
+	GETSETTING(AYAINFO_VERSION)
+}
+
+On_craftman
+{
+	"umeici"
+}
+
+On_craftmanw
+{
+	"?럖"
+}
+
+On_name
+{
+	"AYA"
+}
+
+//---- Owned SSTP 뾭 uniqueid 롦벦 ------------------------------------------------------
+On_uniqueid
+{
+	uniqueid = reference0
+}
+
+//---- hwnd 롦벦 ------------------------------------------------------------------------
+On_hwnd
+{
+	sakurahwnd    = reference0[0]
+	kerohwnd      = reference0[1]
+	sakurablnhwnd = reference1[0]
+	keroblnhwnd   = reference1[1]
+}
+

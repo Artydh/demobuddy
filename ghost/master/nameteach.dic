@@ -1,0 +1,38 @@
+﻿//This is how Demo remembers your name. It's a separate file- doesn't have to be, but the template has it separate and I don't want to risk breaking anything by transferring it.
+
+OnTeachName	
+{
+	if reference0 == "TEACHNAME"
+		{
+		"\0\s[0]I dunnae understand.\w1.\w1.\w1\w8 yer no %(username) anymore?\w3\w8 Well, who am I tae judge.\w8\w5 What they callin' you these days?\![open,inputbox,OnNameTeach,-1]\e"
+		}
+	else
+		{
+		}
+}
+
+OnNameTeach
+{
+	tempname = reference0
+	
+	if reference0 == "Demo" || reference0 == "Demoman" //Two Demomens?!
+	{
+		"\0\s[0]Oi,\w3 ye must've misheard me.\w6 Ye been drinkin' on tha job?\w6 Am the Demoman,\w3 nit ye!\w8 Giz us yer real name.\![open,inputbox,OnNameTeach,-1]"
+	}
+	elseif reference0 == "" || reference0 == " " || reference0 == "   " //But why...? This is if the user doesn't put anything in.
+	{
+		username = "Wee Scrumpy" //You are alcohol now.
+		
+		"\0\s[0]Quiet type,\w5 eh?\w8\w5 Well,\w3 ye be lookin' like a fine bottl' o' Scrumpy tae me!\w8 So I'll be namin' ye Wee Scrumpy!\w8\e"
+	}
+	else //Any other name that doesn't need to be caught by the code.
+	{
+		username = tempname
+		NameDone
+	}
+}
+
+NameDone //Job's done!
+{
+		"\![leave,passivemode]\0\s[0]%(username),\w5 is it?\w8\0\s[5] A fine name if I ever 'erd one\w3 mayt.\e"
+}

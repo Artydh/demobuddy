@@ -1,0 +1,6 @@
+﻿charset,UTF-8
+type,ghost
+name,Demoman
+directory,demoman_72hj
+
+balloon.directory,demobubble

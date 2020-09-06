@@ -1,0 +1,499 @@
+﻿// This is where all the Menu stuff goes.
+
+OpenSakuraMenu
+{
+	if drunk <=5{
+		"\0\s[5]\b2Hi!\w2 How's it gaun?"
+		--
+		MenuRun
+		}
+	else{ //If Demo has passed out, the Menu will be inaccessible, but the user can feed him to wake him up.
+		"\0\s[4]Give Demoman some Coffee-Breakfast-Aspirin™ soup?\n\n"
+		--
+		"\![*]\q[Yes,soberup]\n/
+		\![*]\q[No,butt]\e"
+	}	
+}
+
+Select.soberup{ //Resets Demo's drunkenness.
+	drunk = 0
+	"\0\s[2]\w2\0\s[0]Who are you?!\w8 Where am I?!\w8 I'm gonna blow ye to piec-\w4 oh,\w2 wait\w1.\w1.\w1.\w3 it's you,\w3 %(username).\w8\w3 Sorry.\w8\w8\nWild night\w1.\w1.\w1.\w5 \nCome to think of it-\w6 weren't you the one filling me glass,\w4 ye devil's bottom?\e"
+	"\0\s[2]\w2\0\s[0]Thankfully I already don't remember this.\e"
+	"\0\s[2]\w2\0\s[0]Cripes,\w8 my head\w1.\w1.\w1."
+	"\0\s[2]\w2\0\s[0]I'm glad I dunnae remember last night.\e"
+}
+
+MenuRun
+ {	
+ 	wd = GetWeekDay
+ 	ap = GetAP
+ 	nowmin = Getnowmin
+ 	nowhour = Getnowhour
+	--
+	"\n\n\_q\b2" //The \n\n means two new lines as detailed in the walkthrough, and \_q means quick session, meaning all the text from this point on will display instantly instead of a few letters at a time like normal ghost dialogue.
+	--
+	if lastTalk != "" //What this does is check to see if the ghost has already said a random bit of dialogue on its own, essentially by seeing if the lastTalk thing is NOT empty (!= means "does not equal").
+	{
+	  "\![*]\q[Say that again?,OnLastTalk]\n"
+	  //If the ghost has said something, it will then display this menu option. You can replace "Repeat Last Dialogue" with whatever caption you like, such as "What were you saying?" or "What did you say?" or "Could you repeat that?" or something like that.
+	  
+	  //*********************Advanced User Info*******************************
+	  //These text boxes are meant for those who have an interest in expanding or using more complicated functions in their ghost. Also for my own reference in the future since I plan on using this template too, haha. If you have no interest in any of this and just want to keep things as simple as possible, feel free to skip these boxes.
+	  
+	  //I briefly touched in bootend.dic about \q, but I'll again cover it here. Pay very close attention to how this bit of dialogue is formatted. You'll see it goes \![*]\q[Displayed Name,linkedfunction]. Breaking it down, \![*] puts the balloon's option icon in front of the choice (usually a > or something), \q sets up the choice, Displayed Name which is the text that will display in the ghost's balloon, then linkedfunction, which is what the choice is linked to when the user clicks it. As you go through this file, look at how every menu option is set up, and you will see they all follow this format, give or take a \![*]. If you're going to be adding new options to menus or creating your own functions and such, make sure you follow this format and learn it well. Make sure to read the coding page of the walkthrough.
+	  //***********************************************************************
+	}
+	--
+ 	"\![*]\q[Talk to me!,altalk]\n"
+	"\![*]\q[Let's chat,altalk]\n"
+	"\![*]\q[What's up?,altalk]\n"
+	--
+	"\![*]\q[Pizza time!,testvariable]\n\n/
+	\![*]\q[Give Demo some scrumpy,drinkup]\n/
+	\![*]\q[Do me a favour,dosomething]\n\n[half]/
+	\![*]\q[Configure Demoman,configmenu]\n/
+ 	\![*]\q[Never mind.,CANCEL]\n\n[half]It's %(wd) %(nowhour):%(nowmin) %(ap), %(month)/%(day)/%(year)\e"
+	
+	//UNUSED FUNCTIONS:
+	//\![*]\q[Bug report,bugreport]\n\n/
+		// ^ we made this in 3 days wHAT do YOu Want?!?!?
+	//"\![*]\q[Update,keroupdatecheck]\n\n/
+		// ^ Will need to ask Mitch if he can provide an update link from his server. Prolly not going to bother unless there's time though
+}
+
+Select.altalk
+{
+	AiTalk
+}
+
+OnLastTalk
+{
+"%(lastTalk)\e"
+}
+
+GetWeekDay
+{
+	if weekday == 0
+	{"Sunday"}
+	elseif weekday == 1
+	{"Monday"}
+	elseif weekday == 2
+	{"Tuesday"}
+	elseif weekday == 3
+	{"Wednesday"}
+	elseif weekday == 4
+	{"Thursday"}
+	elseif weekday == 5
+	{"Friday"}
+	else
+	{"Saturday"}
+}
+GetAP
+{
+ 	if hour >= 0 && hour <= 11
+ 		{
+ 			"AM"
+ 		}
+ 	else
+ 		{
+ 			"PM"
+ 		}
+}
+Getnowmin
+{
+	if minute >= 0 && minute <=9
+		{
+			"0%(minute)"
+		}
+	else
+		{
+			"%(minute)"
+		}
+}
+Getnowhour
+{
+	if hour12 >= 0 && hour12 <=9
+		{
+			"0%(hour12)"
+		}
+	else
+		{
+			"%(hour12)"
+		}
+}
+
+Select.BACKTOMENU //Go back to the menu.
+	{
+		MenuRun
+	}
+
+Select.configmenu //Go to the Config menu.
+	{
+		TalkConfig
+	}
+
+TalkConfig //Configuration menu. Change your personal info and enable/disable uninstall here.
+{
+	"\0\b2\_qTinker away, mate!\n\n\" 
+	--
+	"f[bold,1]Name:\f[bold,0] %(username) \f[sup,1](\q[Change it?,TEACHNAME])\f[sup,0]\n"
+	--
+	"\f[bold,1]Birthday:\f[bold,0] %(birthdayprint) \f[sup,1](\q[Change it?,TEACHBDAY])\f[sup,0]\n\n"
+	--
+	"\f[bold,1]Talk Rate:\f[bold,0] - %(talktime) \f[sup,1](\q[Change it,talkinter])\f[sup,0]\n\n"
+	--		
+	{
+		"\![*]\f[bold,1]Uninstalling is %(deleteshitai).\f[bold,0]\n\q[Enable,deleteon]  |  \q[Disable,deleteoff]\n\n[half]\n"
+	}
+	--
+	"\![*]\q[Go back,BACKTOMENU]\e"
+}
+
+Select.deleteon
+{
+	deleteshitai = "ON"
+	TalkConfig
+}
+Select.deleteoff
+{
+	deleteshitai = "OFF"
+	TalkConfig
+}
+
+Select.TEACHBDAY
+{
+	dayslot = GetDaySlot //This is setting up in case today is the user's birthday.
+	"\0\s[0]When did you get thrown into the world?\w6 Don't forget ta put yer month first.\![open,dateinput,OnUserBornFin,-1]\e"
+}
+
+OnUserBornFin
+//This is a slightly different take on Zarla's birthday script, utilizing a dateinput box instead of text. No more putting the month in, then the day, and having to worry about the user putting letters like a wally.
+//Using the SPLIT command, we can store each value from the dateinput box, then use them in much the same way Zarla did.
+//See documentation for SPLIT here: http://emily.shillest.net/ayaya/?%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB/%E9%96%A2%E6%95%B0/SPLIT
+{
+		fullbirthday = reference0
+		
+		_array = SPLIT(fullbirthday,",",3) //We're capturing 3 numbers, so let's make an array with a size of 3. The numbers are separated by commas (,)
+		bornyear = _array[0] //Arrays always start with 0!
+		bornmonth = _array[1]
+		bornday = _array[2]
+		
+		bornyear = year - bornyear //The year from array slot 0 is used to get the user's birthday.
+		bornmonthprint = Printmonth //The same for the month, but with slot 1.
+		borndayprint = Printday //And, finally, slot 2 with the day.
+		userbirthday = "%(bornmonth)month %(bornday)day" 
+		birthdayprint = "%(bornmonthprint) %(borndayprint)" //Now we can store the user's birth date and month into birthdayprint, so we can wish them a happy birthday when the time comes!
+		"%(birthchecked)" //See birthchecked below.
+}
+
+Printmonth
+{
+	if bornmonth == 1
+	{
+		"January"
+	}
+	elseif bornmonth == 2
+	{
+		"February"
+	}
+	elseif bornmonth == 3
+	{
+		"March"
+	}
+	elseif bornmonth == 4
+	{
+		"April"
+	}
+	elseif bornmonth == 5
+	{
+		"May"
+	}
+	elseif bornmonth == 6
+	{
+		"June"
+	}
+	elseif bornmonth == 7
+	{
+		"July"
+	}
+	elseif bornmonth == 8
+	{
+		"August"
+	}
+	elseif bornmonth == 9
+	{
+		"September"
+	}
+	elseif bornmonth == 10
+	{
+		"October"
+	}
+	elseif bornmonth == 11
+	{
+		"November"
+	}
+	else
+	{
+		"December"
+	}
+}
+Printday
+{
+	if bornday == 1 || bornday == 21 || bornday == 31
+	{
+	"%(bornday)st"
+	}
+	elseif bornday == 2 || bornday == 22
+	{
+	"%(bornday)nd"
+	}
+	elseif bornday == 3 || bornday == 23
+	{
+	"%(bornday)rd"
+	}
+	else
+	{
+	"%(bornday)th"
+	}
+}	
+
+birthchecked //Final text to confirm the user's birthday.
+{
+	if userbirthday == dayslot //If today is their birthday...
+		{
+			"\0\s[0]It's the user's birthday. Happy birthday, %(username).\e"
+		}
+	else //Otherwise, just do this.
+		{
+			"\0\s[0]So %(bornmonthprint) %(borndayprint).\w8 I ain't gonna get ye a present.\e"
+		}
+}
+
+Select.talkinter //Change how often the Demoman talks without using the menu.
+ {
+ 		"\0\s[0]\b2I know I can yap on a bit too much... how often do you want me to open me gob?/
+ 		\0\n\n[half]/
+ 		\![*]\q[Every 30 seconds,TALKMAX]\n/
+		\![*]\q[Every minute,TALKHIGH]\n/
+ 		\![*]\q[Every 3 minutes,TALKNORMAL]\n/
+		\![*]\q[Every 5 minutes,TALKPOOR]\n/
+ 		\![*]\q[Don't talk,TALKNONE]\n\n[half]/
+		\![*]\q[Don't change,TalksTill]\e"
+}
+
+Select.TalksTill //User selects the option Demo was already set to.
+{
+		"\0\s[0]No change to the talk rate.\e"
+}
+
+Select.TALKMAX
+{
+ 		talktime = "Every 30 seconds"
+		aitalkinterval = 45
+		
+ 		"\0\s[0]We will speak every 30 seconds.\e"
+}
+Select.TALKHIGH
+{
+ 		talktime = "Every minute"
+		aitalkinterval = 90
+		
+ 		"\0\s[0]We will speak every minute.\e"
+}
+Select.TALKNORMAL
+{
+ 		talktime = "Every 3 minutes"
+		aitalkinterval = 270
+		
+ 		"\0\s[0]We will speak every three minutes.\e"
+}
+Select.TALKPOOR
+{
+ 		talktime = "Every 5 minutes"
+		aitalkinterval = 400
+		
+ 		"\0\s[0]We will speak every five minutes.\e"
+}
+Select.TALKNONE //Tell Demo to shut up.
+{
+ 		talktime = "As quiet as wee church mice"
+		aitalkinterval = 0
+		
+		"\0\s[0]We will not speak.\e"
+}
+	
+Select.TEACHNAME //References the nameteach file. Let's do the name talk again...
+{
+		OnTeachName	
+}
+
+Select.CANCEL //Cancelling the menu.
+{
+		"\0\s[0]Ye want me tae stop?\w8 No problem.\e"
+}
+
+Select.drinkup //Give Demoman a drink. Each drink raises his drunkness by 1- assuming he is conscious. Give him too much and he will pass out.
+{
+	if drunk <=5
+	{
+		drunk++
+		if drunk == 1{ //Demo isn't drunk at all.
+			"\0\s[3]A drink for me?\w8 You know tha way tae a Scotsman's heart.\e"
+			"\0\s[3]This better no be any of that swill Spy drinks.\e"
+		}
+		elseif drunk == 2 || drunk == 3{ //Demo is drunk, but friendly.
+			"\0\s[3]Two?\w8 To what do I owe this generosity?\e"
+			"\0\s[3]Another?\w8 Ye cannae be serious.\e"
+			"\0\s[3]Are ye tryin' tae make me kiss the floor,\w4 %(username)?\e"
+		}
+		elseif drunk == 4 || drunk == 5{ //Demo is now drunk and angry.
+			"\0\s[3]Tha's the way ye do it, mate!\e"
+			"\0\s[3]What makes me a good Demoman?\w8 I wouldnae be sittin' here\w4 talking to ye if I were a bad Demoman now,\w6 would I?\e"
+			"\0\s[3]My head is gonna be breemin' o'er with pain tomorrow.\w8 Keep 'em coming,\w5 %(username)!\e"
+			"\0\s[3]This gentleman will pey for awthing.\e"
+			"\0\s[3]Whaur's tha lavvy?\e"
+		}
+		elseif drunk == 6{ //Demo has alcohol poisoning.
+			"\0\s[3]W\w1h\w1o\w1 a\w1r\w1e\w1 y\w1e\w1?\w8 W\w1h\w1i\w1t\w1 d\w1a\w1e\w1 t\w1h\w1e\w1y\w1 c\w1r\w1y\w1 y\w1e\w1?\0\s[2]\w2\0\s[4]\e"
+			"\0\s[3]D\w1a\w1r\w1 y\w1e\w1 k\w1n\w1a\w1p\w1p\w1 o\w1n\w1y\w1 l\w1e\w1i\w1d\w1 i\w1t\w1h\w1e\w1r t\w1h\w1a\w1n y\w1e\w1r a\w1i\w1n?\0\s[2]\w2\0\s[4]\e"
+			"\0\s[3]S\w1l\w1à\w1i\w1n\w1t\w1e\w1, m\w1a-\w1 *hic*\w8 -\w1t\w1e!\0\s[3]\w2\0\s[4]\e"
+			"\0\s[3]G\w1o\w1n\w1n\w1a k\w1i\w1l\w1l\w1 y\w1o\w1u\w1 a\w1n\w1d\w1 I\w1'\w1l\w1l\w1 k\w1e\w1e\w1p\w1 k\w1i\w1l\w1l\w1i\w1n\w1' y\w1o\w1u\w1 a\w1n\w1d\w1 I\w1'l\w1l\w1 n\w1e\w1v\w1e\w1r, c\w1a\w1u\w1s\w1\w1e y\w1o\w1u\w1'r\w1e '\w1o\w1n\w1n\w1a b\w1e d\w1e\w1a\w1d\w1 a\w1n\w1d t\w1h\w1e\w1n I\w1'\w1m g\w1o\w1n\w1n\w1a k\w1i\w1l\w1l y\w1o\w1u\w1.\0\s[2]\w2\0\s[4]\e"
+		}
+	}
+	else //This should never appear, but just in case it does...
+	{
+		"\0\s[0]That wasn't supposed ta happen!\w8 *Hic*\e"	
+	}
+	}
+
+Select.dosomething //Functions menu.
+{
+ 		"\0\s[0]\b2This is the first function menu intro.\n\n"
+ 		"\0\s[0]\b2This is the second function menu intro.\n\n"
+		"\0\s[0]\b2This is the third function menu intro.\n\n"
+		--
+ 		"\![*]\q[Open Calendar,CALENDAR]\n/
+		\![*]\q[Check Email,MailCheck]\n/
+		\![*]\q[Open SSP Preferences,sspconfig]\n/
+		\![*]\q[Empty Recycle Bin,ChoiceGarbagecan]\n/
+		\![*]\q[System Information,ChoiceSystemInformation]\n\n/
+ 		\![*]\q[Back to main menu,BACKTOMENU]\e"
+}
+
+Select.CALENDAR //A calendar built into SSP. I've not worked with this before so functionality here is pretty limited, but if Demo is especially drunk he'll fuck up and do something else.
+{
+	if drunk <=2{
+		"\0\s[5]Cheers!\w6 Got an important date comin' up?\w5 Heh heh.\![open,calendar]\e"
+	}
+	elseif drunk >=3 && drunk <=4{
+		"\0\s[1]Huh?\w4 Whassat?\w6 Oh,\w2 right.\w5 Cheese.\w4 Cheers.\w4 Wa'ever.\![open,calendar]\e"
+	}
+	elseif drunk >=5 && drunk <=6{ //If Demo is incredibly drunk, he will totally screw up and close himself.
+		"\0\s[2]Ooo!\w5 Aren't we bloody important?\w8 With yer fancy computer calendar and yer fancy...\w7 h\w1a\w1n\w1d\w1s\w1.\w8 When I was a wee lad,\w3 we wrote our important dates on stone\w7 and we \w1l\w1i\w1k\w1e\w1d\w1 it!\w7 \w1B\w1l\w1o\w1o\w1dy \w1w\w1a\w1n\w1k\w1e\w1r\w1 w\w1i\w1t\w1h\w1 y\w1e\w1r\w1 z\w1z\w1z\w1z\w1z\w1...\w8\-\e"
+	}
+}
+
+Select.sspconfig //Opens SSP's built-in menu.
+{
+	if drunk <=2{
+	"\0\s[5]Aye!\w5 Anything you want,\w1 mate.\![open,configurationdialog]\e"
+	}
+	elseif drunk >=3 && drunk <=4{
+	"\0\s[1]I'm only doing this 'cause me ma told me to.\w7 'Tavish,' she said,\w3 'Tavish, yer da had 26 jobs,\w3 ye lazy lout!'\w8 Ye better pay me more than a nickel for this!\![open,configurationdialog]\e"
+	}
+	elseif drunk >=5 && drunk <=6{ //If Demo is incredibly drunk, he will open the calendar instead.
+	"\0\s[2]\f[height,16]FREEDOM!\w3 FOR ALL THE PREFERENCESESES!\f[height,default]\n\w6 I will knock out all yer teeth and courier them to the devil!\w7 Individually!\w7 It will be incredibly expensive!\w7 I'm completely bluttered!\![open,calendar]\e"
+	}
+}
+
+Select.ChoiceGarbagecan //I was always bothered by how the template didn't ask the user if they were sure about this choice, so I added an extra step.
+{
+	_gomicheck = FUNCTIONEX("gomi.dll", "-n")	//Don't touch this line. for those curious, it's referencing a SAORI, which are optional user-made plug-in dlls you can download to enable different functions on your ghost. gomi.dll is one included with this template. All SAORI are in Japanese (maybe Korean or Chinese as well idk) and many have disappeared by now, so don't concern yourself very much with SAORI. It's just some ghost trivia, basically.
+	
+	if _gomicheck == 0 //If the recycle bin is empty.
+	{
+		if drunk <=2{
+		"\0\s[5]Cheers!\w6 Got an important date comin' up?\w5 Heh heh.\![open,calendar]\e"
+		}
+		elseif drunk >=3 && drunk <=4{
+		"\0\s[1]Huh?\w4 Whassat?\w6 Oh,\w2 right.\w5 Cheese.\w4 Cheers.\w4 Wa'ever.\![open,calendar]\e"
+		}
+		elseif drunk >=5 && drunk <=6{ //If Demo is incredibly drunk, he will vomit into your Recycling Bin.
+		"\0\s[2]Ooo!\w5 Aren't we bloody important?\w8 With yer fancy computer calendar and yer fancy...\w7 h\w1a\w1n\w1d\w1s\w1.\w8 When I was a wee lad,\w3 we wrote our important dates on stone\w7 and we \w1l\w1i\w1k\w1e\w1d\w1 it!\w7 \w1B\w1l\w1o\w1o\w1dy \w1w\w1a\w1n\w1k\w1e\w1r\w1 w\w1i\w1t\w1h\w1 y\w1e\w1r\w1 z\w1z\w1z\w1z\w1z\w1...\![open,calendar]\e"
+			}
+		}
+	
+	elseif _gomicheck >= 1 //If the recycle bin is full.
+	{
+		if drunk <=2{
+		"\0\s[5]Nae problem!\0\s[-1]\w8\w8\w8\![raise,OnGarbagecanEmpty]\w9\w9\0\s[0]\e"
+		}
+		elseif drunk >=3 && drunk <=4{
+		"\0\s[1]Ach,\w2 I feel nae well.\w7 Whadiye do to me,\w3 y'devil?\w5 Tha d ’athair na mhàileid!\0\s[-1]\w8\w8\w8\![raise,OnGarbagecanEmpty]\w9\w9\0\s[0]\e"
+		}
+		elseif drunk >=5 && drunk <=6{ //If Demo is incredibly drunk, he will vomit into your Recycling Bin.
+		"\0\s[7]Bleeeeeaaaaarrrrrrgggghhhhh\w8\w8\w8\e"
+		}
+	}
+}
+OnGarbagecanEmpty //Garbage day.
+{
+	_gomi = FUNCTIONEX("gomi.dll", "-f")
+}
+
+Select.ChoiceSystemInformation //Shows you your computer's stats, for some reason
+{
+	os_name = FUNCTIONEX("saori_cpuid.dll","os.name")
+	os_version = FUNCTIONEX("saori_cpuid.dll","os.version")
+	cpu_name = FUNCTIONEX("saori_cpuid.dll","cpu.name")
+	cpu_clockex = FUNCTIONEX("saori_cpuid.dll","cpu.clockex")
+	"/
+	\0\s[0]\b[2]/
+	\_q\f[bold,1]OS:\f[bold,0] %(os_name) %(os_version)\n/
+	\f[bold,1]Memory Load:\f[bold,0] %(memoryload)%\n/
+	\f[bold,1]Physical Memory:\f[bold,0] %(memoryavailphys) KB\n/
+	\f[bold,1]CPU:\f[bold,0] %(cpu_name) %(cpu_clockex)MHz\n/
+	\f[bold,1]Ukagaka:\f[bold,0] %property[baseware.version]/
+	\e"
+}
+
+Select.MailCheck //See etc.dic for the full script. This just calls it.
+	{
+		"\![biff]\e"
+	}
+
+Select.HEADLINECANCEL
+ 	{
+ 		"\0\s[0]Finished with headlines.\e"
+	}
+
+OnChoiceTimeout
+ {
+	"\0\s[0]The menu has timed out.\e"
+ }
+
+
+//This is when they select bug report. This is mostly meant to briefly give the user information about you, the creator, and how to report a problem to you. This can be handy if the person forgot where they got their ghost or how to contact you. Add whatever info you like here.
+Select.bugreport
+{
+"\w5Report bugs to youremailaddress@emailprovider.com. \w5We were downloaded from \_a[http://www.whereveryoupostedthem.com/]some place\_a.\e"
+}
+
+//When clicked, this will automatically tell the ghost to check for updates. More detail on updates in etc.dic. You can leave this alone.
+Select.keroupdatecheck
+{
+	"\0\s[5]\![updatebymyself]\e"
+}
+
+//--Test Variable --------------------------------------------------------
+//I briefly mentioned the test variable in bootend.dic and possibly in etc.dic as well, I'm not sure. What exactly is the test variable? Basically, it's a place you can plug in anything you want to test out. What this means is that you can write some ghost dialogue, then copy and paste it into the test variable dialogue snippet down there, reload your ghost, then choose "test variable" from your second character's menu. Check your dialogue to see if it looks right and if it does, put it back in aitalk, or edit it until it looks right and put it back. While you can use Script Input to test most of your ghost's dialogue, there are some lines it just can't do, and it can't help you test choices. But the test variable can! The dialogue/choices from OnFirstBoot are a prime candidate for testing with this variable.
+//You can also use this to test functions as I mentioned above by adding \![raise,function] at the end of it, although you can do this with Script Input as well. Advanced Users, the test variable is also great for testing out any new stuff you may add to your ghost, like mode settings, item values, functions, raising or lowering numbers, what have you.
+
+//It is ALWAYS A GOOD IDEA to test your dialogue! If you won't check it with the test variable, at least test it with Script Input! It'll save you so much trouble!
+
+Select.testvariable
+{
+	drunk = 0
+	"\0\s[5]Oh it's National Public Sleeping Day today,\w2 is it?\w7 This is me specialty.\w8 Any public place is a good sleeping place,\w3 except for the back o' the Cow & Cockle in Ullapool.\w7 They have an \w2'\w2o\w2p\w2e\w2n\w2 a\w1i\w1r\w1'\w1 toilet concept an'\w1.\w1.\w1\.\w1.\w4 ach,\w3 it's nae pretty.\e" 
+	}
+

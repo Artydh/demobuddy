@@ -1,0 +1,165 @@
+﻿//This is where all the talk stuff happens
+
+AiTalk //PWEASE NO TOUCHY!
+ {
+	if RAND(100) < communicateratio
+ 	{
+ 		StartCommunicate
+	}
+ 	else
+	{
+ 		if mikireflag == 0
+		{
+			if CHAIN.IDName == "" {
+ 				lastTalk = RandomTalk
+			}
+			else {
+				lastTalk = ChainTalk
+			}
+			lastTalk
+		}
+ 		else
+		{ 
+		MikireTalk
+ 		}
+	}
+ }
+
+RandomTalk : nonoverlap //This is Demoman's random dialogue. He'll say this stuff randomly on his own, depending on how often the user has set him to talk in his Config menu. His drunkness influences this.
+{
+	if drunk >= 0 && drunk <= 3{
+		"\0\s[0]There are 2.6 million sheep in Scotland - \w5that's more than the human population.\w8\0\s[5] If those wooly beasties ever start to organize,\w3 we could be in trouble!\e"
+		"\0\s[0]As of 2020,\w5 a Stout Shako is worth 1.33 refined.\e"
+	}
+	elseif drunk >= 4 && drunk <= 5{
+		"\0\s[1]You can survive a sheep attack by discarding any item on your body that's made out of wool,\w4 reading softly to the sheep for at least 15 minutes and then curling into a ball and rolling downhill.\w8\nSheep cannae travel downhill.\e"
+		"\0\s[1]You can make yer own stickybomb in a pinch with a box o' paperclips,\w5 1 sheet of aluminium foil,\w5 5 pounds of puréed rhubarb\w1 and a scented candle.\w8 Don't forget the wee pinch of potassium chloride!\e"
+	}
+	elseif drunk == 6{
+		"\0\s[4]..."
+	}
+}
+	
+//!!KEEP THE STUFF BELOW!! This might be useful for when Demo passes out.	
+
+//-OnMinuteChange
+//These are time-related bits of dialogue for your ghost to say. If you're uninterested, you can delete it all except for a line for MikireTalk. So it'd look something like
+
+//OnMinuteChange
+//{
+//timeslot = GetTimeSlot
+//if mikireflag == 1
+// 	{
+// 		MikireTalk
+//	}
+//}
+
+//But I think these are kind of neat, so I'd leave them myself.
+
+OnMinuteChange
+ {
+	timeslot = GetTimeSlot //this tells the ghost what time it is so the time related conversations above will work.
+	--
+ 	if minute == 0 //These check what time it is. Here, it's seeing if the minute equals zero...
+	{
+ 		if hour == 12 //And the hour equals 12, ie it's noon. You can change this to some other hour if you want.
+		{
+ 			"\0\s[0]It's noon.\e"
+			//Replace with appropriate dialogue as you want.
+		}
+ 		elseif hour == 0 //If the hour is zero, aka midnight. Again, you can change this to whatever hour you want to check for.
+		{
+ 			"\0\s[0]It's midnight!\e"
+ 			"\0\s[0]This is another bit of dialogue for midnight.\e"
+ 			"\0\s[0]This is the third bit of dialogue for midnight.\e"
+			//Then replace the dialogue with what's appropriate.
+		}
+		elseif hour == 23 //if the hour is 23, aka 11 pm.
+		{
+			if minute == 55 //And if the minutes are at 55.
+			{
+			"\0\s[0]5 minutes to midnight.\e"
+			}
+			else //if it isn't 11:55. These are meant to be examples of specific times you can check, you don't have to check for the same times. You can also always delete individual elseifs if you can't think of any time to check. Like, you could delete the elseif for hour == 23 and the subsequent checks below it, then move on to the elseif below for hour 7. This section is flexible.
+			{
+			"\0\s[0]It's 11 pm.\e"
+			//replace the dialogue here again as you like.
+			}
+		}
+		elseif hour == 7 && minute == 30 && weekday == 0 //Here, it's checking for a specific time on a specific day. You can add things to your time checks just like this by using the AND operator, &&. This adds up to 7:30, Sunday. If you have a favorite TV program on at some time, you could have your ghost comment on when it comes on like this.
+		{
+			"\0\s[0]It's 7:30 on Sunday.\e"
+			//Replace with what's appropriate.
+		}
+		elseif hour == 16 //if the hour is 16, or 4 pm. You can add in time checks for whatever times you want, or change what these time checks are looking for. These are just meant to be examples of how it works.
+		{
+			"\0\s[7]It's 4 pm.\e"
+			//Replace with what's appropriate.
+		}
+		else
+		{
+			"\0\s[0]It's %(hour12)'o clock.\e"
+			//%(hour12) stores the time. This is a general top of the hour notification. I personally like this because it helps me keep track of time when I've been working on something, so when a ghost is all "Hey it's 3 o clock" I can be like woah really when did that happen. If you think this is annoying though, you can just delete this bit of dialogue to leave this else statement blank, or leave "" in here instead.
+		}
+	}
+	//Don't touch this part.
+	elseif mikireflag == 1
+ 	{
+ 		MikireTalk
+	}
+ }
+
+//--OnSecondChange
+//Like the above, this handles what happens every time a second goes by. Most of this you will not have to touch.
+
+OnSecondChange
+ {
+	if passsec == 60
+ 		{
+	 	passsec = 1
+ 		passmin = passmin + 1
+		}
+ 	else
+ 		{
+	 	passsec = passsec + 1
+		}
+	if mikireflag == 1 && reference1 == 0
+		{
+			EndMikireTalk
+ 		}
+		mikireflag = reference1
+	if reference2 == 1
+	{
+ 		//This dialogue is for when the two characters are overlapping each other. If you don't want your characters to care, you can just leave this blank.
+		
+		//You can see here the use of two envelopes, screenwidth and screenheight, to tell the user their resolution. Oddly, they are not in parentheses. I'm not sure why this is, but they don't display right otherwise. An odd quirk with these two envelopes.
+		//Note also how Triangle moves away at the end of the dialogue. This is due to the \4 tag. That will make any one character move away from the other if they are able. I talked about this tag and its counterpart tag \5 in the SakuraScript page on the walkthrough.
+	}
+ }
+ 
+MikireTalk
+ {
+	"\0\s[0]I'm off the screen. You can push Ctrl-Shift-F12 to bring her back."
+	//Note the hotkey combo Triangle mentions. He's telling the truth, that should bring her back on the screen.
+ }
+
+EndMikireTalk
+ {
+	"\0\s[0]I'm no longer off the screen.\0\s[0]\n\n[half]Shut up.\e"
+ } 
+
+OnKeyPress //These are the Demo's hotkeys. If, for some reason, you want to change these, this is where you would do it!
+{
+	if reference0 == "t" //Forces the Demo to talk.
+	{
+	OnAiTalk
+	}
+	elseif reference0 == "r" //Repeats the last bit of dialogue Demo said.
+	{
+	OnLastTalk
+	}
+	elseif reference0 == "f1" //Opens the readme
+	{
+	"\![open,readme]"
+	}
+}
